@@ -10,9 +10,10 @@ go
 
 
 create or replace  procedure sp_#select (
-    @tabel char(255)
+    @table varchar(255)
 )
 as
+begin
 /*
 #----------------------------------------------------------------------
 Author: Roland van Veen
@@ -20,7 +21,7 @@ Author: Roland van Veen
 Procedure   : sp_#select
 Description : Generates a select list for a table in alphabetic order.
 Usage       : sp_#select <table_name>
-Parameters  : 1 @tabel  : Name of the table.
+Parameters  : 1 @table  : Name of the table.
 Result      : Resultset with a Select command representation.
 Errorcodes  : Returns 1: Invalid parameter value(s)
 License     : MIT
@@ -31,7 +32,7 @@ Tables      : #msg: Temporary work table
 Note(s)     : Formats select with leading.
 Date        Revision  What
 -------------------------------------------------------------------
-2018-01-18  1.0       Created from older snippets, fixed extra comma issue.
+2018-01-18  1.0       Fixed extra comma issue.
 -------------------------------------------------------------------
 *******************************************************************
 */
@@ -46,7 +47,7 @@ declare
 
 set nocount on
 
-if (object_id (@tabel) is null)
+if (object_id (@table) is null)
 begin
     print 'Table is undefined.'
     return
@@ -60,7 +61,7 @@ create table #msg
 
 select @m = min(name)
 from syscolumns
-where syscolumns.id = object_id(@tabel)
+where syscolumns.id = object_id(@table)
 
 
 --Build  list of column names with ,
@@ -68,7 +69,7 @@ while (@m is not null)
 begin
     select @newmsg = rtrim(name)
     from  syscolumns
-    where syscolumns.id = object_id(@tabel)
+    where syscolumns.id = object_id(@table)
     and   syscolumns.name = @m
 
     if @rowc > 0
@@ -83,26 +84,32 @@ begin
     insert into #msg values (@newmsg)
     select @m = min(name)  , @rowc = @rowc +1
     from  syscolumns
-    where syscolumns.id = object_id(@tabel)
+    where syscolumns.id = object_id(@table)
     and   syscolumns.name > @m
 end
+
+
+
 
 --Present Resultset
 select 'select' cmd
 union all
-select '  '+line  cmd
+select line    cmd
 from   #msg
 union all
-select 'from ' + @tabel cmd
+select 'from '  + rtrim(@table) cmd
 
 
 set nocount off
+end
 go
 
 exec sp_procxmode sp_#select, "unchained"
 go
 grant all on sp_#select to public
 go
-
+setuser
+go
 --eof
+
 

@@ -1,7 +1,10 @@
 # sap_ase_procs
 SAP (Sybase) ASE  A Collection of database admin &amp; development  procedures, queries and snippets.
 
-**Status:** Work in progress.
+Last tested on ASE 16.0, may work in older versions.
+
+
+**License**: MIT
 
 
 
@@ -48,4 +51,13 @@ select
 from authors   
 
 ```
+
+
+### sp#top
+>Emulates Linux 'top'command by cpu usage , run it only in a terminal on linux (isql or sqsh) Kill wth CTRL+C.
+>Displays optionally plan for first process.
+
+
+
+
 ---
