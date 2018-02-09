@@ -28,6 +28,7 @@ Parameters  : @objname: Pattern or name of objects or one one the type indicator
 			  V VIEW
 			  S Systemtable
 			  R Rule
+        SP System procedure  (This is not an official type but used to refer to sybsystemprocs)
 Result      : Resultset with the object names.
 Errorcodes  : -
 Example	    : sp_#ls U

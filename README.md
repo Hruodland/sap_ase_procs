@@ -17,8 +17,7 @@ Last tested on ASE 16.0, may work in older versions.
 | sp_#select     | StoredProc    | Generate a select statement list for a table |
 | sp_#ls         | StoredProc    | List database object names by pattern or type|
 | sp_#ps         | StoredProc    | Display processes not my spid or system |
-
-
+| sp_#top        | StoredProc    | Display top 10 processes by cpu; for ansi terminals |
 
 
 
@@ -53,11 +52,20 @@ from authors
 ```
 
 
-### sp#top
+### sp_#top
 >Emulates Linux 'top'command by cpu usage , run it only in a terminal on linux (isql or sqsh) Kill wth CTRL+C.
 >Displays optionally plan for first process.
 
 
+### sp_#ls
+
+List objects by type, sp_#ls U lists User tables for example;
+Use type SP to refer to system prcoedures.
+
+
+### sp_#ps
+
+Alternative for sp_who, lists blocks as well.
 
 
 ---
