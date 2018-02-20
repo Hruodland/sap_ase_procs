@@ -6,10 +6,7 @@ Last tested on ASE 16.0, may work in older versions.
 
 **License**: MIT
 
-
-
 ---
-
 
 |   Name         |  Type         | Descrption       |
 | :------------- |:------------  | :-----------------|
@@ -18,7 +15,7 @@ Last tested on ASE 16.0, may work in older versions.
 | sp_#ls         | StoredProc    | List database object names by pattern or type|
 | sp_#ps         | StoredProc    | Display processes not my spid or system |
 | sp_#top        | StoredProc    | Display top 10 processes by cpu; for ansi terminals |
-
+| sp_thresholdaction| StoredProc | Example for free space threshold procedure.|
 
 
 ### Additional notes:
@@ -37,17 +34,17 @@ go
 sp_#select authors
 go
 --Result:
-select                                                                                                                                                                                                                                                          
-   address                                                                                                                                                                                                                                                       
-  ,au_fname                                                                                                                                                                                                                                                      
-  ,au_id                                                                                                                                                                                                                                                         
-  ,au_lname                                                                                                                                                                                                                                                      
-  ,city                                                                                                                                                                                                                                                          
-  ,country                                                                                                                                                                                                                                                       
-  ,phone                                                                                                                                                                                                                                                         
-  ,postalcode                                                                                                                                                                                                                                                    
-  ,state                                                                                                                                                                                                                                                         
-from authors   
+select
+   address
+  ,au_fname
+  ,au_id
+  ,au_lname
+  ,city
+  ,country
+  ,phone
+  ,postalcode
+  ,state
+from authors
 
 ```
 
@@ -66,6 +63,13 @@ Use type SP to refer to system prcoedures.
 ### sp_#ps
 
 Alternative for sp_who, lists blocks as well.
+
+
+### sp_thresholdaction
+Example of a free space threshold procedure of medium complexity.
+It dumps log (sometimes database)  to an emergency location for last chance thresholds, otherwise prints messages to the log.
+You need to change the dump location in the code (and or or create a symbolic link on linux for the emergency dump directory).
+
 
 
 ---

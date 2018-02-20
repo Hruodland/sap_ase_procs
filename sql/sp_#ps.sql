@@ -29,8 +29,9 @@ Tables      : -
 Note(s)     :
 Date       Revision  What
 -------------------------------------------------------------------
-2018-01-22 1.1       +Transaction time. +Blocking Processes.
+...
 2018-02-09 1.2       +Reduced output width
+2018¯02-18 1.3       +status column
 -------------------------------------------------------------------
 *******************************************************************
 */
@@ -55,6 +56,7 @@ begin
         , Host = substring(ms.hostname,1,15)
         , Application   = substring (ms.program_name,1,20)
         , "Database"    = substring(db_name(ms.dbid),1,20)
+        , Status= ms.status
         --, "Transaction" = substring(ms.tran_name,1,20)
         , "Tr-[s]"       = isnull(datediff(ss,tr.starttime,getdate()),0)
         , "Blk-[s]"      = isnull(ms.time_blocked,0)
@@ -79,7 +81,7 @@ begin
             , "DEADLOCK TUNE")
     and   ms.cmd not like "%LAZY%"
     and   ms.spid != @@SPID
-    and   ms.suid > 0 
+    and   ms.suid > 0
     order by CPU
 
 
