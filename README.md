@@ -80,7 +80,7 @@ Example of a free space threshold procedure of medium complexity.
 It dumps log (sometimes database)  to an emergency location for last chance thresholds, otherwise prints messages to the log.
 You need to change the dump location in the code (and or or create a symbolic link on linux for the emergency dump directory).
 
-###sp_#count
+### sp_#count
 
 As a DBA  I like  to get  an overview of which tables are small and which are huge related to storage space and number of rows.
 
