@@ -8,13 +8,23 @@ Last tested on ASE 16.0, may work in older versions.
 
 ---
 
+
+**Tools**
+
 |   Name         |  Type         | Descrption       |
 | :------------- |:------------  | :-----------------|
-| sp_#quickref   | StoredProc    | Generate quick reference in ascii or HTML format from sybsyntax|
-| sp_#select     | StoredProc    | Generate a select statement list for a table |
+| sp_#count      | StoredProc    | Quick overview of table and index sizing. |
 | sp_#ls         | StoredProc    | List database object names by pattern or type|
 | sp_#ps         | StoredProc    | Display processes not my spid or system |
 | sp_#top        | StoredProc    | Display top 10 processes by cpu; for ansi terminals |
+| sp_#quickref   | StoredProc    | Generate quick reference in ascii or HTML format from sybsyntax|
+| sp_#select     | StoredProc    | Generate a select statement list for a table |
+
+
+**Templates**
+
+|   Name         |  Type         | Descrption       |
+| :------------- |:------------  | :-----------------|
 | sp_thresholdaction| StoredProc | Example for free space threshold procedure.|
 
 
@@ -70,6 +80,27 @@ Example of a free space threshold procedure of medium complexity.
 It dumps log (sometimes database)  to an emergency location for last chance thresholds, otherwise prints messages to the log.
 You need to change the dump location in the code (and or or create a symbolic link on linux for the emergency dump directory).
 
+###sp_#count
+
+As a DBA  I like  to get  an overview of which tables are small and which are huge related to storage space and number of rows.
+
+
+Example:
+
+|Table                         |Rows                                     |Data (Mb)|Idx  (Mb))|Total(Mb))
+|------------------------------|-----------------------------------------|---------|----------|----------
+|au_pix                        |                                        6|  254.00 |  252.00  |  506.00  
+|authors                       |                                       23|    6.00 |    2.00  |    8.00  
+|blurbs                        |                                        6|   16.00 |   14.00  |   30.00  
+|discounts                     |                                        4|    2.00 |NULL      |    2.00  
+|footab                        |                                        0|    2.00 |NULL      |    2.00  
+|publishers                    |                                        3|    4.00 |NULL      |    4.00  
+|roysched                      |                                       87|    6.00 |    2.00  |    8.00  
+|sales                         |                                       30|    4.00 |NULL      |    4.00  
+|salesdetail                   |                                      116|   18.00 |   12.00  |   30.00  
+|stores                        |                                        7|    2.00 |NULL      |    2.00  
+|titleauthor                   |                                       25|    8.00 |    4.00  |   12.00  
+|titles                        |                                       18|    8.00 |    2.00  |   10.00  
 
 
 ---
