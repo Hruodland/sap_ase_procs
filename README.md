@@ -11,7 +11,7 @@ Last tested on ASE 16.0, may work in older versions.
 
 **Tools**
 
-|   Name         |  Type         | Descrption       |
+|   Name         |  Type         | Description       |
 | :------------- |:------------  | :-----------------|
 | sp_#count      | StoredProc    | Quick overview of table and index sizing. |
 | sp_#ls         | StoredProc    | List database object names by pattern or type|
@@ -23,9 +23,16 @@ Last tested on ASE 16.0, may work in older versions.
 
 **Templates**
 
-|   Name         |  Type         | Descrption       |
+|   Name         |  Type         | Description       |
 | :------------- |:------------  | :-----------------|
 | sp_thresholdaction| StoredProc | Example for free space threshold procedure.|
+
+**Scripts**
+
+|   Name         |  Type         | Description       |
+| :------------- |:------------  | :-----------------|
+| sqlmarker.awk  | awk script    | Add markers to sql batches.|
+
 
 
 ### Additional notes:
@@ -82,7 +89,7 @@ You need to change the dump location in the code (and or or create a symbolic li
 
 ### sp_#count
 
-As a DBA  I like  to get  an overview of which tables are small and which are huge related to storage space and number of rows.
+As a DBA  I like  to get  an quick but not 100% accurate overview of which tables are small and which are huge related to storage space and number of rows.
 
 
 Example:
@@ -102,5 +109,8 @@ Example:
 |titleauthor                   |                                       25|    8.00 |    4.00  |   12.00  
 |titles                        |                                       18|    8.00 |    2.00  |   10.00  
 
+
+### sqlmarker.awk
+Can be used for T-SQL , but any other SQL dialect in batches as well with few changes.
 
 ---
