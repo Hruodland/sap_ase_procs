@@ -34,6 +34,9 @@ Last tested on ASE 16.0, may work in older versions.
 | sqlmarker.awk  | awk script    | Add markers to sql batches.|
 
 
+## Shapes
+Added a shape collection for LibreDraw for drawing server/database/replication diagrams.
+(Shapes are taken from already existing sources).
 
 ### Additional notes:
 
