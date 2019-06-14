@@ -1,4 +1,4 @@
-/* @(#) sp_thresholdaction : sp_thresholdaction */
+/* @(#) sp_thresholdaction : sp_thresholdaction template */
 /* vim: set ts=2 sw=2 tw=0 et :*/
 
 use sybsystemprocs
@@ -8,10 +8,10 @@ print 'Installing PROCEDURE: sp_thresholdaction'
 go
 
 create or replace  proc sp_thresholdaction(
-  @dbname      varchar(30),
-  @segmentname varchar(30),
-  @space_left  int,
-  @status      int
+   @dbname      varchar(30)
+  ,@segmentname varchar(30)
+  ,@space_left  int
+  ,@status      int
   )
 as
 begin
@@ -20,14 +20,14 @@ begin
 Author: Roland van Veen
 #----------------------------------------------------------------------
 Procedure   : sp_thresholdaction
-Description : Free space threshold procedure example.
+Description : Free space threshold procedure example/template.
 Usage       : This threshold procedure supports data and log thresholds.
 Parameters  :
              @dbname: Name of the database
              @segmentname Name of the segment
              @space_left space left in pages
              @status 1=Last chance threshold 0 = user threshold
-Result      : prints messages, dumps database (when log cannot be dumped) or 
+Result      : prints messages, dumps database (when log cannot be dumped) or
               transaction log when needed to an emergency location.
 Errorcodes  : -
 License     : MIT
@@ -37,14 +37,15 @@ Dependency  : SAP ASE 16.0 (may work with  few modifications on older versions)
 Tables      : -
 Note(s)     :
       1.Notice the Hardcoded emergency dump location.
-        (An administrative table could be unavailable and don't put user tables in system databases.)
-      2.There are many ways to implement thresholds, this  only dumps when the last threshold is reached.
+        An administrative table could be unavailable and don't put user tables in system databases.
+      2.There are many ways to implement thresholds, this only dumps when the last threshold is reached.
         Logs only, no dumps, for user thresholds.
         Dumps databases when log is not on a separate device.
 
 Date        Revision  What
 -------------------------------------------------------------------
 2018-02-20  1.0       Created
+2019-06-12  1.1       Reformatting code
 -------------------------------------------------------------------
 *******************************************************************
 */
@@ -52,7 +53,7 @@ Date        Revision  What
 set nocount on
 
 declare @CurrentDate datetime
-declare @after_size int
+declare @after_size  int
 declare @before_size int
 declare @cdm         varchar(100)
 declare @dbid        int
@@ -65,20 +66,20 @@ declare @tpages      bigint
 declare @sleft       varchar(10)
 
 select @dbid = db_id(@dbname)
-select @tpages=lct_admin("reserve",@dbid, 0)
+select @tpages = lct_admin("reserve",@dbid, 0)
 Select @CurrentDate = getdate() , @islogsegment= 'N'
 select @freespace = @space_left * @@pagesize / 1024
-select @logondata=0, @sleft=convert(varchar(10), @space_left)
+select @logondata = 0, @sleft = convert(varchar(10), @space_left)
 
 
---Change this to your path, maybe get it from a user table.
+--Change this to your path, or get it from a user table.
 set @dumpdev='/home/sybase/dumps/emergency/'+@dbname+ convert(varchar(20),@CurrentDate,2) + @segmentname+  '.dmp'
 
 
 --Tests Log and data segment is on same device?
 if exists ( select 1
             from   master..sysdatabases
-            where  ((status&8)/8) = 1
+            where  ((status & 8)/8) = 1
             and name= @dbname)
 begin
    select @logondata=1
@@ -114,12 +115,9 @@ if  ( @status=1 )
 begin
   print 'Last Chance threshold!'
   print "Error : ### Segment '%1!' in database '%2!' has reached last chance threshold.", @segmentname, @dbname
-  print "      : ### Automatic transaction dump made, please adjust segment if needed !"
+
   print "Space Free  : %1! [Mb] %2![pages].", @freespace , @space_left
   print 'Use select lct_admin("abort", <spid>) for the oldest transaction (table syslogshold) if needed.'
-  print 'Use select lct_admin("abort", <spid>) to abort the transaction.'
-
-  --Show 3 oldest  active transations
 
   print '      : ### Top 3 old active transactions'
   select top 3
@@ -171,7 +169,7 @@ begin
   else
     begin
       if @islogsegment='Y'
-      begin  
+      begin
         print 'Dump transactionlog!'
         dump tran @dbname to @dumpdev
         select @error = @@error
@@ -180,17 +178,16 @@ begin
           print "LOG DUMP ERROR: %1!", @error
         end
         print "Info   : The '%1!' transaction log  was dumped", @dbname
+		print "      : ### Automatic transaction dump made, please adjust segment if needed !"
         set @after_size = reserved_pages(db_id(), object_id("syslogs"))
         print "LOG DUMP PAGES: Before: %1!, After %2!", @before_size, @after_size
       end
       else
       begin
-        --Data segment
-        print "Error       : ### Segment '%1!' in database '%2!' has reached LAST threshold", @segmentname, @dbname
+        print "Error       : ### Data segment '%1!' in database '%2!' has reached LAST threshold", @segmentname, @dbname
         print "Space Free  : %1! [Mb] %2![pages]", @freespace , @space_left
       end
     end
-
 end
 
 else --@status=0
@@ -209,7 +206,7 @@ if object_id('sp_thresholdaction') IS NOT NULL
     print 'sp_thresholdaction created'
     exec  sp_procxmode 'sp_thresholdaction', 'anymode'
     grant execute on    sp_thresholdaction to public
+    -- >> Add grant execute to your dbo(s) here! <<
     end
 go
 --eof
-
